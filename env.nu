@@ -29,6 +29,9 @@ $env.PATH = [
   '/usr/lib/wsl/lib'
   '/home/iskaa303/.local/bin'
   '/mnt/c/Users/Iskaa303/AppData/Local/Programs/Microsoft VS Code/bin'
+  '/mnt/c/Program Files/LibreWolf/'
 ]
+
+export BROWSER='/mnt/c/Program Files/LibreWolf/librewolf.exe'
 
 zoxide init nushell | save -f ~/.zoxide.nu
