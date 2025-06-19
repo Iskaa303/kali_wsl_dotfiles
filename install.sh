@@ -60,21 +60,42 @@ setup_configs() {
     cp "$script_dir/config.nu" "$config_dir/"
     cp "$script_dir/starship.toml" "$user_home/.config/"
     
-    # Set ownership (only if not the current user)
+    # Set ownership if not current user
     if [ "$user_name" != "$USER" ]; then
         sudo chown -R "$user_name:$user_name" "$user_home/.config"
     fi
 }
 
-# Setup for root
+# Setup for root (run in subshell with sudo)
 sudo bash -c "$(declare -f setup_configs); setup_configs /root root"
 
-# Setup for user
+# Setup for target user
 user_home=$(eval echo ~$username)
 setup_configs "$user_home" "$username"
 
+# Set Nushell as default shell for both users
+echo "Setting Nushell as default shell..."
+if ! grep -q '/usr/bin/nu' <<< "$(getent passwd root)"; then
+    sudo chsh -s /usr/bin/nu root
+    echo "✔ Root default shell set to Nushell"
+else
+    echo "✔ Root already uses Nushell"
+fi
+
+if ! grep -q '/usr/bin/nu' <<< "$(getent passwd $username)"; then
+    sudo chsh -s /usr/bin/nu "$username"
+    echo "✔ $username default shell set to Nushell"
+else
+    echo "✔ $username already uses Nushell"
+fi
+
+# Verify
+echo
+echo "Shells after change:"
+getent passwd root
+getent passwd "$username"
+
+echo
 echo "Installation complete!"
-echo "Set default shell with:"
-echo "  chsh -s /usr/bin/nu"
-echo "  sudo chsh -s /usr/bin/nu $username"
-echo "Log out and log back in for changes to take effect"
+echo "Log out and back in to see shell changes."
+echo "Use 'sudo nu' if you want to run Nushell temporarily as root without changing root's shell."
