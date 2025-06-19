@@ -32,12 +32,12 @@ done
 
 echo "Starting installation..."
 apt update
-apt install -y gpg batcat fish eza
+apt install -y gpg bat fish eza
 
 # Install Nushell
 echo "Installing Nushell..."
-curl -fsSL https://apt.fury.io/nushell/gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/fury-nushell.gpg
-echo "deb https://apt.fury.io/nushell/ /" | tee /etc/apt/sources.list.d/fury.list >/dev/null
+curl -fsSL https://apt.fury.io/nushell/gpg.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/fury-nushell.gpg
+echo "deb https://apt.fury.io/nushell/ /" | sudo tee /etc/apt/sources.list.d/fury.list
 apt update
 apt install -y nushell
 
