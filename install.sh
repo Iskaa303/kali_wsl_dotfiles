@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Check if running as root
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root"
-    exit 1
-fi
-
 # Get username
 if [ $# -eq 0 ]; then
     read -p "Enter username: " username
@@ -20,7 +14,7 @@ if ! id "$username" &>/dev/null; then
 fi
 
 # Get script directory
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+script_dir="$(pwd)"
 
 # Verify config files exist
 for file in env.nu config.nu starship.toml; do
@@ -31,15 +25,15 @@ for file in env.nu config.nu starship.toml; do
 done
 
 echo "Starting installation..."
-apt update
-apt install -y gpg bat fish eza
+sudo apt update
+sudo apt install -y gpg bat fish eza
 
 # Install Nushell
 echo "Installing Nushell..."
 curl -fsSL https://apt.fury.io/nushell/gpg.key | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/fury-nushell.gpg
 echo "deb https://apt.fury.io/nushell/ /" | sudo tee /etc/apt/sources.list.d/fury.list
-apt update
-apt install -y nushell
+sudo apt update
+sudo apt install -y nushell
 
 # Install Zoxide
 echo "Installing Zoxide..."
@@ -66,14 +60,14 @@ setup_configs() {
     cp "$script_dir/config.nu" "$config_dir/"
     cp "$script_dir/starship.toml" "$user_home/.config/"
     
-    # Set ownership
-    if [ "$user_name" != "root" ]; then
-        chown -R "$username:$username" "$user_home/.config"
+    # Set ownership (only if not the current user)
+    if [ "$user_name" != "$USER" ]; then
+        sudo chown -R "$user_name:$user_name" "$user_home/.config"
     fi
 }
 
 # Setup for root
-setup_configs "/root" "root"
+sudo bash -c "$(declare -f setup_configs); setup_configs /root root"
 
 # Setup for user
 user_home=$(eval echo ~$username)
