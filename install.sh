@@ -39,6 +39,9 @@ curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 echo "Installing Starship..."
 curl -sS https://starship.rs/install.sh | sh -s -- -y
 
+# Install Pyenv
+curl -fsSL https://pyenv.run | bash
+
 # Setup configs for given user
 setup_configs() {
     local target_home=$1
