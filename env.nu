@@ -29,8 +29,11 @@ $env.PATH = [
   '/usr/lib/wsl/lib'
   '/home/iskaa303/.local/bin'
   '/mnt/c/Users/Iskaa303/AppData/Local/Programs/Microsoft VS Code/bin'
+  '/usr/local/cuda-12.9/bin'
+  '/mnt/d/localcolabfold/colabfold-conda/bin'
 ]
 
 $env.BROWSER = '/mnt/c/Program\ Files/LibreWolf/librewolf.exe'
+$env.LD_LIBRARY_PATH = '/usr/local/cuda-12.9/lib64'
 
 zoxide init nushell | save -f ~/.zoxide.nu
